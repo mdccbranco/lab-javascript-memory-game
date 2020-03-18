@@ -44,7 +44,7 @@ window.addEventListener("load", event => {
   document.querySelectorAll(".card").forEach(card => {
     card.addEventListener("click", () => {
       card.classList.toggle("turned");
-      card.classList.add("picked");
+      card.dataset.picked = true;
       memoryGame.pickedCards.push(card.dataset.cardName);
       if (memoryGame.pickedCards.length === 2) {
         if (
@@ -54,29 +54,28 @@ window.addEventListener("load", event => {
           )
         ) {
           memoryGame.pickedCards.splice(0);
-          document.querySelectorAll(".card.picked").forEach(cardPicked => {
-            cardPicked.classList.remove("picked");
-            cardPicked.classList.add("guessed");
+          document.querySelectorAll("[data-picked]").forEach(cardPicked => {
+            cardPicked.dataset.guessed = true;
+            cardPicked.removeAttribute('data-picked');
           });
         } else {
           memoryGame.pickedCards.splice(0);
           setTimeout(
             () =>
-              document.querySelectorAll(".card.picked").forEach(cardPicked => {
-                cardPicked.classList.remove("picked");
+            document.querySelectorAll("[data-picked]").forEach(cardPicked => {
+               cardPicked.removeAttribute('data-picked');
                 cardPicked.classList.remove("turned");
               }),
             1000
           );
         }
       }
-      if (true) {
+      if (memoryGame.isFinished()) {
         html = `<div style="display: block; margin: 0 auto; margin-top:250px">`;
         html += `<h1>You Won!!!</h1>`;
         html += `</div>`;
         document.querySelector("#memory-board").innerHTML = html;
       }
-
       document.getElementById("pairs-clicked").innerHTML =
         memoryGame.pairsClicked;
       document.getElementById("pairs-guessed").innerHTML =
